@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revolusjonsquizen 1789</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Plakat fra 1789: nattblått blekk, pergament, kokardens rødt/blått + gull. Én-tema-verden. */
+  --ink:#0e1830;
+  --ink-2:#17244a;
+  --ink-3:#22336a;
+  --paper:#f4ecda;
+  --paper-ink:#1c1a17;
+  --rouge:#e0393e;
+  --bleu:#2f6ce0;
+  --or:#efb02c;
+  --vert:#26b36b;
+  --muted:#9fb0d6;
+  --display:"Alfa Slab One", "Rockwell", Georgia, serif;
+  --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--ink);color:#fff;font-family:var(--body);font-size:17px;line-height:1.45;
+  background-image:radial-gradient(circle at 15% -10%, #233a7a 0, transparent 45%),radial-gradient(circle at 110% 110%, #3a1630 0, transparent 40%);
+  background-attachment:fixed}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--or);outline-offset:3px}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+.hidden{display:none!important}
+
+/* ---------- topp ---------- */
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+.cockade{width:34px;height:34px;flex:none}
+.pill{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:999px;padding:6px 12px;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap}
+.pill b{color:#fff;font-variant-numeric:tabular-nums}
+.iconbtn{background:var(--ink-2);border:1px solid var(--ink-3);color:#fff;border-radius:999px;padding:6px 12px;font-size:14px}
+
+/* ---------- hjem ---------- */
+.hero{padding:18px 0 8px}
+.hero .yr{display:inline-block;font-family:var(--display);font-size:clamp(84px,22vw,150px);line-height:.85;letter-spacing:-2px;margin:0;
+  background:linear-gradient(90deg,var(--bleu) 0 33.3%,#fff 33.3% 66.6%,var(--rouge) 66.6%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(26px,6vw,38px);margin:6px 0 4px;text-wrap:balance}
+.hero p{margin:0;color:var(--muted);max-width:60ch}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 22px}
+
+h2.sec{font-family:var(--display);font-weight:400;font-size:22px;margin:26px 0 10px;display:flex;align-items:center;gap:10px}
+h2.sec small{font-family:var(--body);font-size:13px;color:var(--muted);font-weight:600}
+
+.plan{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:16px;padding:14px;display:grid;gap:6px}
+.plan .d{display:grid;grid-template-columns:62px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;color:var(--muted);font-size:15px}
+.plan .d b{color:#fff;font-family:var(--display);font-weight:400}
+.plan .d.today{background:var(--ink-3);color:#fff;box-shadow:inset 4px 0 0 var(--or)}
+.plan .d .ok{color:var(--vert);font-weight:800}
+
+.levels{display:grid;gap:12px}
+.lvl{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;text-align:left;width:100%;
+  background:var(--ink-2);border:1px solid var(--ink-3);border-radius:18px;padding:14px;color:#fff;transition:transform .12s, background .12s}
+.lvl:hover:not(:disabled){transform:translateY(-2px);background:var(--ink-3)}
+.lvl:disabled{opacity:.45;cursor:not-allowed}
+.lvl .num{width:64px;height:64px;border-radius:14px;display:grid;place-items:center;font-family:var(--display);font-size:30px;color:var(--ink)}
+.lvl h3{margin:0;font-family:var(--display);font-weight:400;font-size:20px}
+.lvl p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.lvl .meta{text-align:right;font-size:13px;color:var(--muted)}
+.stars{font-size:20px;letter-spacing:2px;color:#3a4a7a}
+.stars .on{color:var(--or)}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.mode{background:transparent;border:2px dashed var(--ink-3);border-radius:18px;padding:16px;color:#fff;text-align:left}
+.mode:hover:not(:disabled){border-color:var(--or)}
+.mode:disabled{opacity:.45;cursor:not-allowed}
+.mode h3{margin:0 0 4px;font-family:var(--display);font-weight:400;font-size:19px}
+.mode p{margin:0;color:var(--muted);font-size:14px}
+.foot{margin-top:28px;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.linkbtn{background:none;border:none;color:var(--muted);text-decoration:underline;padding:0;font-size:13px}
+
+/* ---------- spill ---------- */
+.gametop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.progress{font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums}
+.timerbar{height:10px;background:var(--ink-2);border-radius:99px;overflow:hidden;margin-bottom:14px}
+.timerbar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--vert),var(--or));border-radius:99px;transform-origin:left}
+.qcard{background:var(--paper);color:var(--paper-ink);border-radius:20px;padding:22px 20px 26px;position:relative;
+  box-shadow:0 10px 0 rgba(0,0,0,.25);min-height:150px;display:flex;flex-direction:column;justify-content:center}
+.qcard .tag{position:absolute;top:-12px;left:16px;background:var(--or);color:var(--ink);font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+.qcard .clock{position:absolute;top:-18px;right:14px;width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-family:var(--display);font-size:22px;border:3px solid var(--paper);font-variant-numeric:tabular-nums}
+.qcard .clock.hurry{background:var(--rouge);animation:pulse .5s infinite alternate}
+@keyframes pulse{to{transform:scale(1.08)}}
+.qcard h2{margin:6px 0 0;font-size:clamp(20px,4.6vw,27px);line-height:1.25;font-weight:800;text-wrap:balance}
+.answers{display:grid;gap:12px;margin-top:18px}
+.ans{display:grid;grid-template-columns:44px 1fr;align-items:center;gap:12px;border:none;border-radius:16px;padding:16px 16px;color:#fff;font-size:18px;font-weight:600;text-align:left;
+  box-shadow:0 6px 0 rgba(0,0,0,.28);transition:transform .08s, opacity .2s, filter .2s;min-height:68px}
+.ans:hover:not(:disabled){transform:translateY(-2px)}
+.ans:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.28)}
+.ans svg{width:36px;height:36px}
+.ans.c0{background:var(--rouge)}.ans.c1{background:var(--bleu)}.ans.c2{background:#c98a0e}
+.ans:disabled{cursor:default}
+.ans.dim{opacity:.28;filter:grayscale(.6)}
+.ans.right{outline:4px solid #fff;box-shadow:0 0 0 8px var(--vert)}
+.ans.picked-wrong{outline:4px solid #fff}
+.ans .mark{margin-left:auto}
+
+.feedback{margin-top:16px;border-radius:18px;padding:16px;display:grid;gap:8px;animation:pop .25s ease-out}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.feedback.good{background:#123f2c;border:2px solid var(--vert)}
+.feedback.bad{background:#46161c;border:2px solid var(--rouge)}
+.feedback .big{font-family:var(--display);font-size:26px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.feedback .pts{font-size:22px;color:var(--or)}
+.feedback .exp{color:#e6ecff;font-size:16px}
+.feedback .correct{font-weight:800}
+.next{justify-self:end;background:#fff;color:var(--ink);border:none;border-radius:12px;padding:12px 22px;font-weight:800;font-size:17px}
+.nextrow{display:flex;justify-content:flex-end;align-items:center;gap:12px}
+.pausebtn{background:none;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:12px;padding:10px 14px;font-weight:600;font-size:15px}
+.next.auto{background:linear-gradient(90deg,var(--or) 0 50%,#fff 50% 100%);background-size:200% 100%;background-position:100% 0;animation:fill var(--d) linear forwards}
+@keyframes fill{to{background-position:0 0}}
+.streak{color:var(--or);font-weight:800}
+.float{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);font-family:var(--display);font-size:56px;color:var(--or);pointer-events:none;text-shadow:0 4px 0 rgba(0,0,0,.4);animation:floatup 1s ease-out forwards;z-index:20}
+@keyframes floatup{to{transform:translate(-50%,-140%);opacity:0}}
+
+/* ---------- resultat ---------- */
+.result{text-align:center;padding-top:10px}
+.result .title{font-family:var(--display);font-size:clamp(34px,8vw,52px);margin:6px 0;text-wrap:balance}
+.result .bigstars{font-size:54px;letter-spacing:6px;color:#3a4a7a}
+.result .bigstars .on{color:var(--or);display:inline-block;animation:starIn .4s ease-out both}
+@keyframes starIn{from{transform:scale(0) rotate(-90deg)}}
+.result .score{font-family:var(--display);font-size:46px;color:var(--or);font-variant-numeric:tabular-nums}
+.result .sub{color:var(--muted)}
+.btnrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0}
+.btn{border:none;border-radius:14px;padding:14px 22px;font-weight:800;font-size:17px}
+.btn.pri{background:var(--or);color:var(--ink)}
+.btn.sec{background:var(--ink-2);color:#fff;border:1px solid var(--ink-3)}
+.review{text-align:left;display:grid;gap:10px;margin-top:10px}
+.review .r{background:var(--ink-2);border-left:5px solid var(--rouge);border-radius:12px;padding:12px 14px}
+.review .r .q{font-weight:800}
+.review .r .a{color:var(--vert);font-weight:700;margin-top:4px}
+.review .r .e{color:var(--muted);font-size:15px;margin-top:4px}
+.unlock{display:inline-block;background:var(--vert);color:#04170d;font-weight:800;border-radius:99px;padding:6px 14px;margin-top:6px}
+
+/* ---------- skrivetrening ---------- */
+.wcards{display:grid;gap:12px}
+.wcard{background:var(--paper);color:var(--paper-ink);border-radius:16px;padding:16px}
+.wcard h3{margin:0 0 8px;font-size:18px;text-wrap:balance}
+.wcard .chip{display:inline-block;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:3px 8px;border-radius:99px;background:#e5d9bd;margin-bottom:8px}
+.wcard ul{margin:8px 0 0;padding-left:20px}
+.wcard li{margin:4px 0}
+.wcard .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.wcard button{border:none;border-radius:10px;padding:9px 14px;font-weight:700;font-size:15px}
+.wcard .show{background:var(--ink);color:#fff}
+.wcard .r1{background:#d6f0e1;color:#0e4a2b}.wcard .r2{background:#f6e6bd;color:#5a4205}.wcard .r3{background:#f6d0d1;color:#6a1418}
+.wcard .r1.sel{background:var(--vert);color:#fff}.wcard .r2.sel{background:var(--or);color:var(--ink)}.wcard .r3.sel{background:var(--rouge);color:#fff}
+.tip{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:14px;padding:12px 14px;color:var(--muted);font-size:15px;margin-bottom:14px}
+.tip b{color:#fff}
+
+canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:30;width:100%;height:100%}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:420px){.lvl{grid-template-columns:52px 1fr}.lvl .num{width:52px;height:52px;font-size:24px}.lvl .meta{grid-column:2;text-align:left}}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="wrap">
+  <div class="top">
+    <svg class="cockade" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#2f6ce0"/><circle cx="20" cy="20" r="13" fill="#fff"/><circle cx="20" cy="20" r="7" fill="#e0393e"/></svg>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="pill">Poeng totalt <b id="totalPts">0</b></span>
+      <button class="iconbtn" id="muteBtn" aria-label="Lyd av eller på">🔊</button>
+    </div>
+  </div>
+
+  <!-- HJEM -->
+  <section id="home">
+    <div class="hero">
+      <p class="yr" aria-hidden="true">1789</p>
+      <h1>Revolusjonsquizen</h1>
+      <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px"><label for="nameIn" style="color:#fff;font-weight:600">Navnet ditt:</label><input id="nameIn" maxlength="20" placeholder="Skriv navnet ditt" style="font:inherit;background:var(--ink-2);border:1px solid var(--ink-3);color:#fff;border-radius:10px;padding:6px 10px;width:180px"></p>
+      <p><span id="hello">Klar?</span> Svar riktig og raskt for flest poeng. Klarer du 7 av 10 på et nivå, låses det neste opp. Målet er å storme Bastillen før prøven.</p>
+    </div>
+    <div class="stats">
+      <span class="pill">Dager spilt <b id="daysPlayed">0</b></span>
+      <span class="pill">Spørsmål mestret <b id="mastered">0</b> / <b id="qTotal">0</b></span>
+      <span class="pill">Beste rekke <b id="bestStreak">0</b> 🔥</span>
+    </div>
+
+    <h2 class="sec">Plan mot prøven <small>ca. 15 min per dag</small></h2>
+    <div class="plan" id="plan"></div>
+
+    <h2 class="sec">Nivåer</h2>
+    <div class="levels" id="levels"></div>
+
+    <h2 class="sec">Ekstra</h2>
+    <div class="modes">
+      <button class="mode" id="modeMiss"><h3>🪤 Feilfella</h3><p id="missTxt">Spørsmålene du bommet på sist. Riktig svar vises.</p></button>
+      <button class="mode" id="modeExam"><h3>📝 Prøvemodus</h3><p>15 blandede spørsmål fra alle nivåer, uten hjelp underveis.</p></button>
+      <button class="mode" id="modeWrite"><h3>✍️ Skrivetrening</h3><p>Prøven er skriftlig. Øv på å forklare med egne ord, og sammenlign med et modellsvar.</p></button>
+    </div>
+
+    <div class="foot">
+      <span>Framgangen lagres i denne nettleseren.</span>
+      <button class="linkbtn" id="unlockAll">Foreldre/lærer: åpne alle nivåer</button>
+      <button class="linkbtn" id="resetBtn">Nullstill</button>
+    </div>
+  </section>
+
+  <!-- SPILL -->
+  <section id="game" class="hidden">
+    <div class="gametop">
+      <button class="iconbtn" id="quitBtn">✕ Avslutt</button>
+      <span class="progress" id="prog">1 / 10</span>
+      <span class="pill"><b id="gScore">0</b> p <span class="streak" id="gStreak"></span></span>
+    </div>
+    <div class="timerbar"><i id="tbar"></i></div>
+    <div class="qcard">
+      <span class="tag" id="qTag">Nivå 1</span>
+      <span class="clock" id="clock">30</span>
+      <h2 id="qText">Spørsmål</h2>
+    </div>
+    <div class="answers" id="answers"></div>
+    <div id="fb"></div>
+  </section>
+
+  <!-- RESULTAT -->
+  <section id="result" class="hidden"></section>
+
+  <!-- SKRIVETRENING -->
+  <section id="write" class="hidden">
+    <div class="gametop"><button class="iconbtn" id="writeBack">← Tilbake</button><span class="pill">Kan det: <b id="wCount">0</b> / <b id="wTotal">0</b></span></div>
+    <h2 class="sec" style="margin-top:6px">Skrivetrening</h2>
+    <div class="tip"><b>Slik gjør du:</b> Les spørsmålet og si eller skriv svaret med egne ord, gjerne 3–5 setninger. Trykk så «Vis modellsvar» og sjekk hva du fikk med. Bruk fagbegrepene!</div>
+    <div class="wcards" id="wcards"></div>
+  </section>
+</div>
+
+<script>
+/* ===================== SPØRSMÅL =====================
+   [nivå, spørsmål, riktig, galt1, galt2, forklaring] */
+const Q = [
+/* ---- Nivå 1: Grunnbegrepene ---- */
+[1,"Hva er en revolusjon?","En rask og stor endring av hvordan samfunnet styres","Et vanlig stortingsvalg hvert fjerde år","En lov som kongen vedtar alene","En revolusjon er en rask og grunnleggende omveltning av samfunnet, ofte med opprør og vold."],
+[1,"Hva betyr enevelde?","At kongen har all makt alene","At folket velger en president","At makta er delt i tre","Under eneveldet laget kongen lovene, styrte landet og var øverste dommer, alt på én gang."],
+[1,"Hvem var konge i Frankrike da revolusjonen startet i 1789?","Ludvig 16.","Ludvig 14.","Napoleon Bonaparte","Ludvig 16. var konge. Ludvig 14. («Solkongen») levde tidligere, og Napoleon tok makta først i 1799."],
+[1,"Hvor mange stender var det i det franske stendersamfunnet?","Tre","To","Fem","Første stand var geistligheten, andre stand adelen og tredje stand alle andre."],
+[1,"Hvem var første stand?","Geistligheten (prestene)","Adelen","Bøndene","Kirkens folk var første stand. Det viser hvor viktig kirka var i samfunnet."],
+[1,"Hvem var andre stand?","Adelen","Geistligheten","Borgerskapet","Adelen var de fornemme familiene med titler, jord og privilegier."],
+[1,"Hvem tilhørte tredjestanden?","Alle andre: bønder, arbeidere og borgerskapet","Bare kongens familie","Biskoper og abbeder","Tredjestanden var alle som ikke var adel eller geistlige, fra fattige bønder til rike kjøpmenn."],
+[1,"Omtrent hvor stor del av folket tilhørte tredjestanden?","Rundt 97–98 prosent","Rundt 50 prosent","Rundt 10 prosent","Nesten alle var i tredjestanden, men de hadde nesten ingen makt."],
+[1,"Hva betyr «geistligheten»?","Prestene og kirkens folk","Soldatene i kongens hær","De rike kjøpmennene i byene","Geistlig betyr åndelig. Geistligheten var biskoper, prester, munker og nonner."],
+[1,"Hva er en republikk?","En stat uten konge, der statsoverhodet velges","En stat der kongen arver makta","En stat som styres av kirka","I en republikk er det ingen konge. Statsoverhodet, ofte en president, velges."],
+[1,"Hva er et monarki?","En stat med konge eller dronning som statsoverhode","En stat der folket velger president","En stat uten lover","I et monarki går kongemakta i arv, ofte fra forelder til barn."],
+[1,"Hva heter nasjonalforsamlingen i Norge?","Stortinget","Regjeringen","Høyesterett","Stortinget er Norges folkevalgte, lovgivende forsamling."],
+[1,"Hva er en menneskerettighet?","En rettighet alle har fordi de er mennesker","En rettighet bare adelen har","En regel som bare gjelder i Norge","Menneskerettigheter gjelder alle, uansett hvem du er eller hvor du er født."],
+[1,"Hvilke to stender slapp nesten å betale skatt?","Adelen og geistligheten","Bøndene og arbeiderne","Borgerskapet og bøndene","De to første standene hadde privilegier. Skatten havnet på tredjestanden."],
+[1,"Hvilket år startet den franske revolusjonen?","1789","1814","1689","1789. Norge fikk sin grunnlov i 1814, delvis inspirert av revolusjonen."],
+[1,"Hva var slagordet til revolusjonen?","Frihet, likhet, brorskap","Én konge, én tro, én lov","Gud, konge og fedreland","«Liberté, égalité, fraternité». «Én konge, én tro, én lov» var det gamle slagordet til eneveldet!"],
+[1,"Hva var opplysningstiden?","En periode på 1700-tallet der fornuft og vitenskap skulle forklare verden","Tiden da byene fikk elektrisk lys","En periode der kirka bestemte all kunnskap","Opplysningsfilosofene ville «opplyse» folk med fornuft i stedet for overtro."],
+[1,"Hva betyr folkesuverenitet?","At makta kommer fra folket","At makta kommer fra Gud via kongen","At makta tilhører de rikeste","Suveren betyr øverste makt. Folkesuverenitet: folket er sjefen."],
+[1,"Hva er maktfordelingsprinsippet?","At makta deles i tre uavhengige deler","At kongen deler ut makt til vennene sine","At alle stender får like mange stemmer","Lovgivende, utøvende og dømmende makt skal holdes adskilt."],
+[1,"Hva het fengselet folk i Paris stormet 14. juli 1789?","Bastillen","Versailles","Louvre","Bastillen var et festningsfengsel og et symbol på kongens makt."],
+[1,"Hvor bodde kongen og hoffet?","I slottet Versailles","I Bastillen","I Buckingham Palace","Versailles er et enormt slott utenfor Paris. Luksusen der kostet staten mye penger."],
+[1,"Hva er en stenderforsamling?","Et møte med representanter fra alle tre stender","Et møte bare for adelen","Kongens private råd","Stenderforsamlingen samlet utsendinger fra geistligheten, adelen og tredjestanden."],
+[1,"Hva var tienden?","En avgift på en tiendedel av avlingen til kirka","Den tiende kongen av Frankrike","En fest hver tiende dag","Bøndene måtte gi omtrent 1/10 av det de produserte til kirka."],
+[1,"Hvilken stand tilhørte en fattig bonde?","Tredjestanden","Første stand","Andre stand","Bøndene var den største gruppen i tredjestanden."],
+
+/* ---- Nivå 2: Samfunnet før revolusjonen ---- */
+[2,"Hvilket begrep passer? «Folkevalgt, lovgivende forsamling»","Nasjonalforsamling","Stenderforsamling","Regjering","En nasjonalforsamling er valgt av folket og lager lover. I Norge: Stortinget."],
+[2,"Hvilket begrep passer? «Et samfunn delt i grupper man blir født inn i, med ulike rettigheter»","Stendersamfunn","Demokrati","Republikk","I stendersamfunnet bestemte fødselen hvem du var og hva du fikk lov til."],
+[2,"Hvilket begrep passer? «Kongen har all makt og trenger ikke spørre noen»","Enevelde","Folkesuverenitet","Maktfordeling","Enevelde = ene (én person) + velde (makt)."],
+[2,"Hvilket begrep passer? «Makta skal komme fra folket»","Folkesuverenitetsprinsippet","Maktfordelingsprinsippet","Enevelde","Folkesuverenitet er det motsatte av at makta kommer fra Gud via kongen."],
+[2,"Hvilket begrep passer? «Lovgivende, utøvende og dømmende makt holdes adskilt»","Maktfordelingsprinsippet","Folkesuverenitetsprinsippet","Stendersamfunnet","Maktfordeling hindrer at én person får all makt."],
+[2,"Du er sønn av en greve. Hvilken stand tilhører du?","Andre stand (adelen)","Første stand","Tredjestanden","Greve er en adelstittel, og adelskap gikk i arv."],
+[2,"Du er en rik advokat i Paris. Hvilken stand tilhører du?","Tredjestanden","Andre stand","Første stand","Overraskende? Borgerskapet kunne være rike og utdannede, men var likevel i tredjestanden."],
+[2,"Du er biskop. Hvilken stand tilhører du?","Første stand","Andre stand","Tredjestanden","Biskoper var geistlige. Mange høye geistlige kom fra adelsfamilier."],
+[2,"Hvorfor kunne ikke en flink bondegutt bli offiser eller minister?","Fødselen bestemte hvilken plass du fikk i samfunnet","Bønder fikk ikke lov til å lære å lese","Kongen trakk lodd om alle stillinger","I stendersamfunnet var de høyeste stillingene forbeholdt adelen."],
+[2,"Hvem betalte mest skatt før revolusjonen?","Tredjestanden","Adelen","Geistligheten","De fattigste betalte mest. Det var en viktig grunn til sinnet mot systemet."],
+[2,"Hvorfor mente mange at kongen hadde rett til å styre?","De trodde kongen var innsatt av Gud","Kongen hadde vunnet et valg","Kongen var sterkest i landet","Kongen styrte «av Guds nåde». Å gå imot kongen var nesten å gå imot Gud."],
+[2,"Hvorfor hadde kirka så stor makt?","Den eide mye jord, krevde tiende og ble sett på som Guds stemme","Den hadde Europas største hær","Prestene ble valgt av folket","Kirka var rik, styrte mye av hverdagen og ga kongen religiøs støtte."],
+[2,"Hva hadde kirka ansvar for, i tillegg til gudstjenester?","Skole, utdanning og hjelp til fattige","Hæren og marinen","Handelen med Amerika","Kirka var med i hele livet: dåp, skole, ekteskap, fattighjelp og begravelse."],
+[2,"Hvorfor var det farlig å kritisere kirka?","Folk fryktet Guds straff, og kritikere kunne straffes av myndighetene","Kirka betalte folk for å være stille","Det fantes ingen bøker i Frankrike","Kirka og kongen støttet hverandre. Kritikere kunne bli sensurert eller fengslet."],
+[2,"Hva er forskjellen på monarki og republikk?","I et monarki arves statsoverhodet, i en republikk velges det","I et monarki finnes ingen lover","Et monarki har parlament, en republikk har ikke","Det handler om hvem som er statsoverhode og hvordan man blir det."],
+[2,"Hva slags stat er Norge i dag?","Et konstitusjonelt monarki med demokrati","En republikk med president","Et enevelde","Norge har konge, men makta ligger hos Stortinget, regjeringen og domstolene."],
+[2,"Hva slags stat er Frankrike i dag?","En republikk","Et monarki","Et enevelde","Frankrike har president. Kongedømmet ble avskaffet under revolusjonen (og igjen senere)."],
+[2,"Hvem gjelder menneskerettighetene for?","Alle mennesker, uansett hvem de er","Bare de som betaler skatt","Bare voksne menn","I 1789 tenkte mange bare på menn. I dag gjelder rettighetene alle."],
+[2,"Hvilket ord passer? «En rask og omfattende omveltning av samfunnet»","Revolusjon","Reform","Valg","En reform er en gradvis forbedring. En revolusjon snur alt på hodet."],
+[2,"Hvem ønsket mest å beholde stendersamfunnet?","Adelen og de høye geistlige","Bøndene","Arbeiderne i byene","De hadde privilegier å tape, så de ville ha alt som før."],
+[2,"Hvilket ord passer? «Tid da tenkere brukte fornuften og kritiserte kirke og konge»","Opplysningstiden","Middelalderen","Steinalderen","Opplysningstiden er 1700-tallet, også kalt «fornuftens tidsalder»."],
+[2,"Hva måtte en fransk bonde betale før revolusjonen?","Skatt til kongen, tiende til kirka og avgifter til adelen","Ingenting hvis han var fattig","Bare en liten avgift til byen","Bøndene ble presset fra tre kanter og hadde lite igjen."],
+[2,"Hva betyr privilegier?","Særrettigheter som bare noen grupper har","Plikter alle borgere har","Straff for lovbrudd","Adelens privilegier var blant annet skattefritak og rett til de høyeste stillingene."],
+[2,"Hvilken av disse er en menneskerettighet?","Ytringsfrihet","Retten til å eie slaver","Retten til å slippe skatt fordi du er adelig","Ytringsfrihet betyr at du kan si din mening uten å bli straffet."],
+
+/* ---- Nivå 3: 1789, året alt skjedde ---- */
+[3,"Hvorfor kalte kongen inn Stenderforsamlingen i 1789?","Staten var nesten konkurs og trengte mer skatt","Han ville gi folket demokrati","Han ville erklære krig mot England","Statskassa var tom etter kriger og luksus. Kongen trengte godkjenning for nye skatter."],
+[3,"Hvem kalte inn Stenderforsamlingen?","Kong Ludvig 16.","Robespierre","Napoleon","Det var kongen selv som kalte den inn, for å løse pengeproblemet."],
+[3,"Når møttes Stenderforsamlingen?","I mai 1789","I juli 1776","I mai 1814","Den åpnet 5. mai 1789."],
+[3,"Hvor møttes Stenderforsamlingen?","I Versailles","I Bastillen","I Notre-Dame","Den møttes i Versailles, ved kongens slott."],
+[3,"Når hadde Stenderforsamlingen sist vært samlet før 1789?","I 1614, over 170 år tidligere","5 år tidligere","50 år tidligere","Eneveldige konger trengte ikke å spørre noen, så forsamlingen hadde ikke vært samlet på 175 år."],
+[3,"Hvordan skulle det stemmes i Stenderforsamlingen?","Hver stand hadde én stemme","Hver representant hadde én stemme","Kongen hadde alle stemmene","Én stemme per stand betydde at adel og geistlighet sammen hadde to av tre stemmer."],
+[3,"Hvorfor var stemmereglen urettferdig for tredjestanden?","Adelen og geistligheten kunne alltid stemme dem ned 2 mot 1","Tredjestanden fikk ikke møte","Tredjestanden hadde flest stemmer","Selv om de representerte nesten hele folket, kunne de alltid tape."],
+[3,"Hva krevde tredjestanden i Stenderforsamlingen?","At hver representant skulle ha én stemme","At kongen skulle gå av med en gang","At adelen skulle få flere stemmer","Stemme per hode ville gi tredjestanden mye større makt."],
+[3,"Hva gjorde tredjestanden 17. juni 1789?","Erklærte seg som Nasjonalforsamling","Stormet Bastillen","Henrettet kongen","De sa at de, ikke kongen, representerte nasjonen."],
+[3,"Hvorfor møttes de i ballhuset 20. juni 1789?","De var stengt ute fra den vanlige møtesalen","Det var den største salen i Paris","Kongen inviterte dem på ball","Ballhuset var en hall for et ballspill, ikke dans!"],
+[3,"Hva sverget de under Ballhuseden?","Ikke å gå fra hverandre før Frankrike hadde fått en ny grunnlov","Å være trofaste mot kongen for alltid","Å starte krig mot Østerrike","Ballhuseden var et løfte om å gi Frankrike en grunnlov som begrenset kongens makt."],
+[3,"Hvilket prinsipp viste Ballhuseden?","Folkesuverenitet: makta kommer fra folket","Enevelde","Stendersamfunnet","Nasjonalforsamlingen mente de hadde makt fordi de representerte folket, ikke fordi kongen ga dem den."],
+[3,"Hva ble konsekvensen av Ballhuseden?","Kongens enevelde ble utfordret, og han måtte gi etter","Kongen fikk enda mer makt","Stenderforsamlingen fortsatte som før","Kongen ga etter og ba de andre standene slutte seg til Nasjonalforsamlingen."],
+[3,"Hva gjorde kongen like etter Ballhuseden?","Ba adelen og geistligheten slutte seg til Nasjonalforsamlingen","Flyktet til Amerika","Oppløste hæren","27. juni 1789 ga kongen etter. Nasjonalforsamlingen ble Frankrikes nye maktsentrum."],
+[3,"Hvem ønsket forandring mest?","Tredjestanden, særlig borgerskapet","Adelen","Kongen og hoffet","Borgerskapet hadde utdannelse og penger, men ingen makt."],
+[3,"Hvorfor var borgerskapet misfornøyd?","De var rike og utdannede, men hadde ingen politisk makt","De måtte bo på landet","De fikk ikke lov til å lese bøker","De betalte skatt, leste opplysningsfilosofene og ville være med å bestemme."],
+[3,"Hvorfor var mange i Paris sinte i 1788–1789?","Dårlige avlinger gjorde brødet svært dyrt","Det var forbudt å spise brød","Kongen hadde stengt alle bakerier","Sult gjorde at vanlige folk var klare til å gjøre opprør."],
+[3,"Hvilken av disse var IKKE en årsak til revolusjonen?","Frankrike hadde nettopp innført demokrati","Stor statsgjeld etter kriger","Urettferdig skattesystem","Frankrike var et enevelde. Mangel på demokrati var en årsak, ikke demokrati."],
+[3,"Hvordan inspirerte den amerikanske revolusjonen franskmennene?","Den viste at et folk kunne bryte med en konge og lage sin egen grunnlov","Amerikanerne invaderte Frankrike","Amerika nektet å selge korn til Frankrike","Franske soldater som kjempet i Amerika kom hjem med nye ideer om frihet."],
+[3,"Hvorfor fikk Frankrike mer gjeld av den amerikanske revolusjonen?","Frankrike støttet amerikanerne med penger og soldater mot Storbritannia","Amerika krevde skatt av Frankrike","Frankrike måtte kjøpe Amerika","Krigen ble dyr. Ironisk nok hjalp kongen en revolusjon som senere smittet hans eget land."],
+[3,"Hva skjedde 14. juli 1789?","Folk i Paris stormet Bastillen","Ballhuseden ble avlagt","Kongen ble henrettet","Stormingen av Bastillen ble et symbol på at folket reiste seg mot eneveldet."],
+[3,"Hvorfor er 14. juli en viktig dag i Frankrike i dag?","Det er nasjonaldagen, til minne om stormingen av Bastillen","Det er kongens bursdag","Det er dagen republikken ble avskaffet","Franskmenn feirer 14. juli omtrent som vi feirer 17. mai."],
+[3,"Hva skjedde FØRST av disse?","Stenderforsamlingen møttes","Ballhuseden","Stormingen av Bastillen","Rekkefølgen: Stenderforsamlingen (5. mai) → Ballhuseden (20. juni) → Bastillen (14. juli)."],
+[3,"Hva skjedde SIST av disse?","Stormingen av Bastillen","Ballhuseden","Stenderforsamlingen åpnet","Bastillen ble stormet 14. juli, etter Ballhuseden 20. juni."],
+[3,"Hvor mange representanter hadde tredjestanden i Stenderforsamlingen?","Omtrent like mange som de to andre standene til sammen","Bare ti","Ingen","Tredjestanden hadde ca. 600 av rundt 1200, men med én stemme per stand hjalp ikke det."],
+
+/* ---- Nivå 4: Ideer, rettigheter og resultater ---- */
+[4,"Hvilken filosof er kjent for maktfordelingsprinsippet?","Montesquieu","Rousseau","Voltaire","Montesquieu skrev «Om lovenes ånd» (1748) om å dele makta i tre."],
+[4,"Hvilken filosof skrev om folkesuverenitet i «Samfunnspakten»?","Rousseau","Montesquieu","Newton","Rousseau mente makta tilhører folket, og at folkets felles vilje skal styre."],
+[4,"Hvilken filosof kjempet for ytringsfrihet og religionsfrihet og kritiserte kirka?","Voltaire","Ludvig 16.","Montesquieu","Voltaire var kjent for skarpe angrep på kirkas makt og intoleranse."],
+[4,"John Locke mente alle har en naturlig rett til ...","Liv, frihet og eiendom","Tro, håp og kjærlighet","Gull, makt og land","Locke mente staten finnes for å beskytte disse rettighetene. Ideen ble viktig i Amerika."],
+[4,"Hvordan tenkte opplysningsfilosofene nytt om vitenskap?","Sannhet skal finnes med fornuft, observasjon og forsøk","Alt som står i gamle bøker er sant","Bare prester kan forstå naturen","Man skulle ikke bare tro på autoriteter, men undersøke selv."],
+[4,"Hvordan tenkte opplysningsfilosofene nytt om samfunnet?","Mennesker er født frie og like, og makt må ha en god begrunnelse","Gud har bestemt hvem som skal styre","Bønder trenger ingen rettigheter","Dette utfordret både stendersamfunnet og eneveldet."],
+[4,"Hva var Encyclopédie (det store leksikonet)?","Et oppslagsverk som spredte ny kunnskap og nye ideer","En bok med kongens lover","Kirkas bønnebok","Leksikonet samlet kunnskap om alt fra teknikk til politikk og ble en del sensurert."],
+[4,"Hvilken vitenskapsmann viste at naturen følger lover som kan regnes ut?","Isaac Newton","Voltaire","Robespierre","Newtons tyngdelov inspirerte troen på at fornuften kan forklare alt, også samfunnet."],
+[4,"Hvem har den lovgivende makta i Norge?","Stortinget","Regjeringen","Domstolene","Stortinget vedtar lover og statsbudsjett."],
+[4,"Hvem har den utøvende makta i Norge?","Regjeringen","Stortinget","Høyesterett","Regjeringen, ledet av statsministeren, setter lovene ut i livet."],
+[4,"Hvem har den dømmende makta i Norge?","Domstolene","Stortinget","Kongen alene","Domstolene, med Høyesterett øverst, dømmer i saker etter lovene."],
+[4,"Hvorfor er maktfordeling viktig?","For å hindre at én person eller gruppe får for mye makt","For at kongen skal slippe å jobbe","For at det skal bli flere valg","De tre maktene kontrollerer hverandre."],
+[4,"Hvordan blir Stortinget valgt?","Folket stemmer ved valg hvert fjerde år","Kongen velger dem","Regjeringen velger dem","Dette er folkesuverenitet i praksis."],
+[4,"Hva inspirerte Norges grunnlov av 1814?","Den amerikanske og den franske revolusjonen","Det franske eneveldet","Kirkas regler fra middelalderen","Grunnloven bygde på maktfordeling og folkesuverenitet, ideer fra opplysningstiden."],
+[4,"«No taxation without representation» var et slagord i Amerika. Hva betyr det?","Ingen skatt uten at vi får være med å bestemme","Ingen skatt for de rikeste","Alle skal betale like mye skatt","Kolonistene betalte skatt til Storbritannia uten å ha representanter i parlamentet."],
+[4,"Når kom USAs uavhengighetserklæring?","1776","1789","1814","4. juli 1776, 13 år før den franske revolusjonen."],
+[4,"Hvilken idé fra uavhengighetserklæringen inspirerte franskmennene?","At alle mennesker er skapt like og har rettigheter","At kongen er innsatt av Gud","At kolonier skal betale skatt","«All men are created equal» utfordret tanken om at fødselen bestemmer verdien din."],
+[4,"Hva var Erklæringen om menneskets og borgerens rettigheter (1789)?","Et dokument om at menn fødes frie og like i rettigheter","Kongens plan for nye skatter","En fredsavtale med England","Erklæringen kom i august 1789. Kvinner som Olympe de Gouges krevde at den skulle gjelde dem også."],
+[4,"Hva skjedde med adelens privilegier i august 1789?","De ble avskaffet","De ble doblet","De ble gitt til kirka","4. august 1789 vedtok Nasjonalforsamlingen å avskaffe privilegiene. Stendersamfunnet slo sprekker."],
+[4,"Hvilken styreform fikk Frankrike i 1792?","Republikk","Enevelde","Stendersamfunn","Kongedømmet ble avskaffet, og Frankrike ble republikk i september 1792."],
+[4,"Hva skjedde med Ludvig 16.?","Han ble dømt og henrettet i 1793","Han ble president","Han ble konge i Spania","Han ble dømt for forræderi og henrettet i januar 1793."],
+[4,"Hvem tok makta i Frankrike i 1799?","Napoleon Bonaparte","Voltaire","Montesquieu","Generalen Napoleon tok makta ved et statskupp og gjorde seg senere til keiser."],
+[4,"Hva er et varig resultat av revolusjonen?","Ideer om menneskerettigheter og folkestyre spredte seg i Europa","Stendersamfunnet ble styrket","Kirka fikk mer makt enn før","Ideene levde videre, blant annet i Norges grunnlov i 1814."],
+[4,"Sieyès skrev i 1789: «Hva er tredjestanden? Alt.» Hva mente han?","Tredjestanden var nesten hele nasjonen, men hadde ingen makt","Tredjestanden hadde for mye makt","Tredjestanden burde avskaffes","Fortsettelsen var: «Hva har den vært hittil? Ingenting.»"],
+[4,"Hva var terrorperioden (1793–1794)?","En tid da revolusjonens ledere henrettet mange de så som fiender","En fredelig periode med valg","En krig mellom England og USA","Robespierre og hans tilhengere lot tusenvis henrette. Revolusjonen hadde også en mørk side."],
+[4,"Hvilken påstand om revolusjonens resultat stemmer best?","Den ga store endringer, men også vold og uro før Napoleon tok makta","Alt ble fredelig og demokratisk med en gang","Ingenting forandret seg","Revolusjonen endret Europa, men veien dit var kaotisk."],
+
+/* ---- Nivå 5: Bastillen (sjefsnivå) ---- */
+[5,"Hvilket par passer IKKE sammen?","Montesquieu og folkesuverenitet","Rousseau og folkesuverenitet","Voltaire og ytringsfrihet","Montesquieu hører sammen med maktfordeling. Folkesuverenitet er Rousseau."],
+[5,"Hvilken av disse er IKKE en del av maktfordelingen i Norge?","Kirka","Domstolene","Regjeringen","De tre maktene er Stortinget, regjeringen og domstolene."],
+[5,"Hvilken rekkefølge er riktig?","Stenderforsamling → Ballhuseden → Bastillen → Republikk","Ballhuseden → Stenderforsamling → Republikk → Bastillen","Bastillen → Stenderforsamling → Republikk → Ballhuseden","Mai 1789 → 20. juni 1789 → 14. juli 1789 → 1792."],
+[5,"Statsministeren i Norge leder ...","Regjeringen, som har den utøvende makta","Stortinget, som har den lovgivende makta","Høyesterett, som har den dømmende makta","Stortinget ledes av stortingspresidenten, ikke statsministeren."],
+[5,"Stortinget vedtar en lov som bryter Grunnloven. Hvem kan si fra?","Domstolene, med Høyesterett øverst","Kongen alene","Statsministerens parti","Domstolene kan la være å bruke lover som bryter Grunnloven. Slik kontrollerer maktene hverandre."],
+[5,"Hvilket prinsipp ville Ludvig 16. vært MEST imot?","Folkesuverenitet","Enevelde","Kongemakt av Guds nåde","Hvis makta kommer fra folket, kommer den ikke fra Gud via kongen."],
+[5,"En venn sier: «Norge er en republikk, for vi har demokrati.» Hva svarer du?","Feil. Norge har konge, så det er et monarki, men et demokratisk ett","Riktig, alle demokratier er republikker","Riktig, kongen velges av Stortinget","Monarki/republikk handler om statsoverhodet. Demokrati handler om hvem som har makta."],
+[5,"Hvilken påstand om stendersamfunnet er FEIL?","Man kunne lett bytte stand ved å jobbe hardt","Man ble født inn i sin stand","De to første standene hadde privilegier","Det var nesten umulig å bytte stand. Det var nettopp det som var urettferdig."],
+[5,"Hva hadde den amerikanske og den franske revolusjonen til felles?","Begge bygde på opplysningsideer om rettigheter og folkestyre","Begge endte med at en konge fikk mer makt","Begge var kriger mot Spania","Begge brøt med kongemakt og laget erklæringer om rettigheter."],
+[5,"Hvorfor var det et problem at kongen både laget lover, styrte og dømte?","Ingen kunne stoppe ham om han misbrukte makta","Det ble for mange lover","Han hadde for lite å gjøre","Derfor ville Montesquieu dele makta."],
+[5,"Hva kunne skjedd om tredjestanden IKKE hadde avlagt Ballhuseden?","Kongen kunne lettere sendt dem hjem og beholdt eneveldet","Frankrike ville blitt republikk samme dag","Bastillen ville aldri blitt bygget","Eden gjorde det vanskelig for kongen å oppløse forsamlingen."],
+[5,"Hva førte direkte til at Stenderforsamlingen ble kalt inn?","Pengekrise i staten og adel som nektet å betale mer skatt","Stormingen av Bastillen","At Napoleon krevde det","Adelen sa at bare en Stenderforsamling kunne godkjenne nye skatter."],
+[5,"Hva var Frankrike etter grunnloven i 1791, før republikken?","Et konstitusjonelt monarki: konge, men med begrenset makt","Et enevelde","En republikk uten konge","Kongen ble sittende, men måtte følge grunnloven."],
+[5,"Hvilket dokument kom FØRST?","USAs uavhengighetserklæring","Erklæringen om menneskets og borgerens rettigheter","Norges grunnlov","1776 → 1789 → 1814."],
+[5,"Hvilken stand hadde flest representanter i Stenderforsamlingen?","Tredjestanden","Adelen","Geistligheten","Tredjestanden fikk doble sin andel, men stemmereglen gjorde det verdiløst."],
+[5,"Hva skjedde med kirkas jord under revolusjonen?","Staten tok den og solgte den","Kirka fikk enda mer jord","Den ble gitt til adelen","I november 1789 overtok staten kirkas jord for å betale gjelda."],
+[5,"Hvilken rettighet fra 1789 har du også i Norge i dag?","Ytringsfrihet","Retten til å slippe skatt som adelig","Retten til å bli dømt av kongen personlig","Ytringsfriheten står i Grunnloven § 100."],
+[5,"Hvorfor heter det nettopp opplysningstiden?","Fornuften skulle lyse opp mørket av overtro og uvitenhet","Fordi lyspæra ble funnet opp","Fordi kirka tente lys i alle hus","På engelsk «the Enlightenment», på fransk «les Lumières» (lysene)."],
+[5,"Hvilken setning om Norge i dag er riktigst?","Folket velger Stortinget, og makta er delt mellom Storting, regjering og domstoler","Kongen velger Stortinget, og regjeringen dømmer","Folket velger dommerne, og kongen lager lovene","Her ser du folkesuverenitet og maktfordeling i samme setning."],
+[5,"Hvem tapte mest på revolusjonen?","Adelen og kongehuset","Borgerskapet","Bøndene","Adelen mistet privilegiene, og kongen mistet både makta og livet."],
+[5,"Hvorfor var brødprisen så viktig i 1789?","Brød var hovedmaten, og fattige brukte det meste av lønna på det","Brød ble brukt som penger","Kongen eide alle bakeriene","Når brødet ble dyrt, sultet folk. Sult gjør folk sinte."],
+[5,"Hva skilte folkesuverenitet fra eneveldet?","Makta kommer fra folket, ikke fra Gud via kongen","Folkesuverenitet betyr at kongen får mer makt","Det finnes ingen forskjell","Dette er kjernen i hele revolusjonen."]
+];
+
+const LEVELS = [
+  {id:1, name:"Bonde",        sub:"Grunnbegrepene",                         time:30, color:"var(--vert)"},
+  {id:2, name:"Borger",       sub:"Stendersamfunnet, kirka og kongen",     time:25, color:"var(--or)"},
+  {id:3, name:"Representant", sub:"1789: Stenderforsamling og Ballhuseden", time:20, color:"#7fb2ff"},
+  {id:4, name:"Filosof",      sub:"Opplysningstid, rettigheter og Norge",  time:20, color:"#ff8a8e"},
+  {id:5, name:"Bastillen",    sub:"Sjefsnivå: vanskelige og lure spørsmål",time:15, color:"#fff"}
+];
+const SHOW_FIRST_PLAYS = 2; // nivå 3–5 viser riktig svar de første gangene
+
+const WRITE = [
+ ["Før revolusjonen","Hvordan var samfunnet i Frankrike bygget opp på slutten av 1700-tallet?",
+  ["Et <b>stendersamfunn</b> med tre stender: geistligheten (1.), adelen (2.) og tredjestanden (3.).","Du ble født inn i en stand og kunne nesten ikke bytte.","Adel og geistlighet hadde <b>privilegier</b> og slapp nesten skatt.","Tredjestanden (ca. 97 %) betalte skatt, tiende og avgifter, men hadde ingen makt.","Kongen styrte med <b>enevelde</b> «av Guds nåde»."]],
+ ["Før revolusjonen","Hvordan tenkte opplysningsfilosofene nytt om verden, vitenskap og samfunnet?",
+  ["<b>Opplysningstiden</b>: fornuft, observasjon og forsøk i stedet for overtro og autoriteter.","Alle mennesker er født frie og like og har naturlige rettigheter (Locke).","Montesquieu: <b>maktfordeling</b>. Rousseau: <b>folkesuverenitet</b>. Voltaire: ytrings- og religionsfrihet.","De kritiserte eneveldet, stendersamfunnet og kirkas makt."]],
+ ["Før revolusjonen","Hvorfor hadde prestene og kirka så stor makt?",
+  ["Folk var svært religiøse, og kirka ble sett på som Guds stemme.","Kongen ble sett på som innsatt av Gud, så kirke og konge støttet hverandre.","Kirka eide mye jord og krevde <b>tiende</b>.","Kirka styrte skole, utdanning, fattighjelp og registrering av fødsel og død.","Kritikk kunne bli straffet og sensurert."]],
+ ["Før revolusjonen","Hvilke konsekvenser fikk perioden for menneskerettigheter, demokrati og maktfordeling?",
+  ["Ideene ble grunnlaget for <b>menneskerettighetene</b> (erklæringen 1789, FN 1948).","<b>Folkesuverenitet</b> ble grunnlaget for demokrati: folket velger representanter.","<b>Maktfordelingsprinsippet</b> ble brukt i USAs grunnlov og Norges grunnlov av 1814."]],
+ ["Norge i dag","Hvordan er makta fordelt i Norge i dag?",
+  ["<b>Lovgivende</b> makt: Stortinget (folkevalgt hvert fjerde år).","<b>Utøvende</b> makt: regjeringen, ledet av statsministeren.","<b>Dømmende</b> makt: domstolene, med Høyesterett øverst.","Maktene kontrollerer hverandre, så ingen får for mye makt.","Norge er et konstitusjonelt <b>monarki</b> med demokrati: kongen har lite reell makt."]],
+ ["Revolusjonen","Hvem ønsket forandring i Frankrike, og hvorfor?",
+  ["<b>Tredjestanden</b>, særlig borgerskapet: rike og utdannede, men uten politisk makt.","Bøndene: tung skatt, tiende og avgifter til adelen.","Fattige i byene: sult og dyrt brød.","De var påvirket av opplysningsideer om frihet og likhet."]],
+ ["Revolusjonen","Hva var årsakene til den franske revolusjonen? Trekk inn den amerikanske revolusjonen.",
+  ["Statsgjeld etter kriger og luksus ved hoffet i Versailles.","Urettferdig skattesystem: de fattigste betalte mest.","Dårlige avlinger 1788 → dyrt brød og sult.","Opplysningsideer kritiserte enevelde og stendersamfunn.","<b>Den amerikanske revolusjonen</b> (1776): viste at folk kunne bryte med en konge. Frankrike støttet USA og fikk mer gjeld, og soldater kom hjem med nye ideer."]],
+ ["Revolusjonen","Hvorfor ble Stenderforsamlingen kalt inn i mai 1789? Hvem kalte inn, hvem deltok og hva skjedde?",
+  ["Ludvig 16. kalte den inn fordi staten var nesten konkurs og trengte nye skatter.","Første gang siden 1614. Den møttes i Versailles 5. mai 1789.","Deltakere: representanter for geistligheten, adelen og tredjestanden.","Hver stand hadde én stemme, så tredjestanden kunne alltid tapes 2–1. De krevde én stemme per representant.","17. juni erklærte tredjestanden seg som <b>Nasjonalforsamling</b>."]],
+ ["Revolusjonen","Hva skjedde under Ballhuseden 20. juni 1789? Hva ble de enige om, og hva ble konsekvensene?",
+  ["Nasjonalforsamlingen ble stengt ute fra møtesalen og samlet seg i et ballhus.","De sverget å ikke gå fra hverandre før Frankrike hadde fått en ny <b>grunnlov</b>.","Dette bygde på <b>folkesuverenitetsprinsippet</b>: makta kommer fra folket, ikke fra kongen.","Konsekvens: kongens enevelde ble utfordret, og kongen måtte gi etter (27. juni).","Veien ble åpnet for grunnlov, menneskerettighetserklæring og til slutt republikk."]],
+ ["Revolusjonen","Forklar forskjellen mellom monarki og republikk.",
+  ["<b>Monarki</b>: en konge eller dronning er statsoverhode, og stillingen går i arv.","<b>Republikk</b>: ingen konge, statsoverhodet (ofte en president) velges.","Et monarki kan være eneveldig (Frankrike før 1789) eller konstitusjonelt og demokratisk (Norge i dag).","Frankrike ble republikk i 1792."]],
+ ["Revolusjonen","Hva ble resultatet av revolusjonen?",
+  ["Eneveldet og stendersamfunnet ble avskaffet, og adelen mistet privilegiene.","Erklæringen om menneskets og borgerens rettigheter (1789).","Frankrike ble republikk i 1792, og kongen ble henrettet i 1793.","Også vold og uro (terrorperioden), og Napoleon tok makta i 1799.","Ideene om frihet, likhet og folkestyre spredte seg og inspirerte blant annet Norges grunnlov i 1814."]]
+];
+
+/* ===================== LAGRING ===================== */
+const KEY="rev1789_henrik_v1";
+let S = {levels:{}, qs:{}, days:[], total:0, bestStreak:0, unlockAll:false, write:{}, mute:false};
+try{ const raw=localStorage.getItem(KEY); if(raw) S=Object.assign(S,JSON.parse(raw)); }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+const today = () => new Date().toISOString().slice(0,10);
+function lv(id){ return S.levels[id] || (S.levels[id]={best:0,bestScore:0,plays:0}); }
+
+/* ===================== LYD ===================== */
+let AC=null;
+function beep(freqs, dur=0.12, type="triangle", vol=0.08){
+  if(S.mute) return;
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    freqs.forEach((f,i)=>{
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.type=type; o.frequency.value=f; o.connect(g); g.connect(AC.destination);
+      const t=AC.currentTime+i*dur*0.9;
+      g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.start(t); o.stop(t+dur+0.02);
+    });
+  }catch(e){}
+}
+const sGood=()=>beep([523,659,784,1047],0.11);
+const sBad=()=>beep([220,165],0.22,"sawtooth",0.05);
+const sTick=()=>beep([880],0.05,"square",0.03);
+
+/* ===================== HJELPERE ===================== */
+const $=id=>document.getElementById(id);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const SHAPES=[
+ '<svg viewBox="0 0 40 40"><polygon points="20,5 37,35 3,35" fill="#fff"/></svg>',
+ '<svg viewBox="0 0 40 40"><polygon points="20,3 37,20 20,37 3,20" fill="#fff"/></svg>',
+ '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="#fff"/></svg>'
+];
+function show(id){ ["home","game","result","write"].forEach(s=>$(s).classList.toggle("hidden",s!==id)); window.scrollTo(0,0); }
+function isUnlocked(id){ return id===1 || S.unlockAll || lv(id-1).best>=7; }
+function starsFor(c){ return c>=9?3:c>=7?2:c>=5?1:0; }
+function starHTML(n){ return [0,1,2].map(i=>`<span class="${i<n?'on':''}">★</span>`).join(""); }
+function mastered(){ return Object.values(S.qs).filter(x=>x.last===true && x.r>=1).length; }
+function missList(){ return Q.map((q,i)=>i).filter(i=>S.qs[i] && S.qs[i].last===false); }
+
+/* ===================== HJEM ===================== */
+const PLAN=[
+ ["Dag 1","Nivå 1 og 2. Lær grunnbegrepene.",()=>lv(1).plays>0&&lv(2).plays>0],
+ ["Dag 2","Nivå 2 og 3 + Feilfella.",()=>lv(3).plays>0],
+ ["Dag 3","Nivå 3 og 4 + 3 kort i Skrivetrening.",()=>lv(4).plays>0],
+ ["Dag 4","Nivå 4 og 5 (Bastillen!) + Feilfella.",()=>lv(5).plays>0],
+ ["Dag 5","Prøvemodus to ganger + resten av Skrivetrening.",()=>(S.examPlays||0)>0]
+];
+function renderHome(){
+  $("totalPts").textContent=S.total.toLocaleString("nb-NO");
+  $("daysPlayed").textContent=S.days.length;
+  $("mastered").textContent=mastered();
+  $("qTotal").textContent=Q.length;
+  $("bestStreak").textContent=S.bestStreak;
+  $("muteBtn").textContent=S.mute?"🔇":"🔊";
+  const dayIdx=Math.min(4, S.days.includes(today())? S.days.length-1 : S.days.length);
+  $("plan").innerHTML=PLAN.map((p,i)=>`<div class="d ${i===dayIdx?'today':''}"><b>${p[0]}</b><span>${p[1]}${i===dayIdx?' <em style="color:var(--or);font-style:normal;font-weight:800">← i dag</em>':''}</span><span class="ok">${p[2]()?'✓':''}</span></div>`).join("");
+  $("levels").innerHTML=LEVELS.map(L=>{
+    const d=lv(L.id), open=isUnlocked(L.id), n=Q.filter(q=>q[0]===L.id).length;
+    return `<button class="lvl" data-l="${L.id}" ${open?'':'disabled'}>
+      <span class="num" style="background:${L.color}">${open?L.id:'🔒'}</span>
+      <span><h3>${L.name}</h3><p>${L.sub} · ${n} spørsmål · ${L.time} sek</p></span>
+      <span class="meta"><div class="stars">${starHTML(starsFor(d.best))}</div>${d.plays?`Best: ${d.best}/10`:(open?'Ikke spilt':'Klar 7/10 på nivå '+(L.id-1))}</span>
+    </button>`;}).join("");
+  document.querySelectorAll(".lvl").forEach(b=>b.onclick=()=>startRound("level",+b.dataset.l));
+  const m=missList().length;
+  $("modeMiss").disabled=m===0;
+  $("missTxt").textContent= m ? `${m} spørsmål du bommet på sist. Riktig svar vises.` : "Ingen bom å øve på ennå. Bra!";
+  $("unlockAll").textContent= S.unlockAll ? "Lås nivåene igjen" : "Foreldre/lærer: åpne alle nivåer";
+}
+
+/* ===================== RUNDE ===================== */
+let R=null;
+function pickFrom(ids, n){
+  // usette først, så de man har bommet på, så resten
+  const pr=i=>{const s=S.qs[i]; if(!s) return 3; if(s.last===false) return 2; return 1 - Math.min(0.9,(s.r||0)/5);};
+  return shuffle(ids).sort((a,b)=>pr(b)-pr(a)+ (Math.random()-.5)*0.4).slice(0,n);
+}
+function startRound(mode, levelId){
+  let ids, label, time, showAns;
+  if(mode==="level"){
+    const L=LEVELS[levelId-1];
+    ids=pickFrom(Q.map((q,i)=>i).filter(i=>Q[i][0]===levelId),10);
+    label=`Nivå ${levelId} · ${L.name}`; time=L.time;
+    showAns = levelId<=2 || lv(levelId).plays < SHOW_FIRST_PLAYS;
+  } else if(mode==="miss"){
+    ids=shuffle(missList()).slice(0,10); label="Feilfella"; time=30; showAns=true;
+  } else {
+    ids=shuffle([1,2,3,4,5].flatMap(l=>pickFrom(Q.map((q,i)=>i).filter(i=>Q[i][0]===l),3))); label="Prøvemodus"; time=20; showAns=false;
+  }
+  if(!S.days.includes(today())){ S.days.push(today()); save(); }
+  R={mode, levelId, ids, i:0, score:0, correct:0, streak:0, label, time, showAns, misses:[]};
+  show("game"); nextQ();
+}
+let timerRAF=null, qStart=0, answered=false, lastTick=-1;
+function nextQ(){
+  const id=R.ids[R.i], q=Q[id];
+  answered=false; lastTick=-1;
+  $("prog").textContent=`${R.i+1} / ${R.ids.length}`;
+  $("gScore").textContent=R.score.toLocaleString("nb-NO");
+  $("gStreak").textContent=R.streak>=2?`🔥${R.streak}`:"";
+  $("qTag").textContent=R.label+(R.showAns?"":" · uten hjelp");
+  $("qText").textContent=q[1];
+  $("fb").innerHTML="";
+  const opts=shuffle([{t:q[2],ok:true},{t:q[3]},{t:q[4]}]);
+  $("answers").innerHTML=opts.map((o,k)=>`<button class="ans c${k}" data-ok="${o.ok?1:0}" aria-label="Svar ${k+1}: ${o.t.replace(/"/g,'&quot;')}">${SHAPES[k]}<span>${o.t}</span></button>`).join("");
+  document.querySelectorAll(".ans").forEach(b=>b.onclick=()=>answer(b));
+  qStart=performance.now();
+  cancelAnimationFrame(timerRAF);
+  const tick=now=>{
+    const el=(now-qStart)/1000, left=Math.max(0,R.time-el);
+    $("tbar").style.transform=`scaleX(${left/R.time})`;
+    const secs=Math.ceil(left); $("clock").textContent=secs;
+    $("clock").classList.toggle("hurry",left<=5);
+    if(left<=5 && secs!==lastTick && secs>0){ lastTick=secs; sTick(); }
+    if(left<=0){ answer(null); return; }
+    timerRAF=requestAnimationFrame(tick);
+  };
+  timerRAF=requestAnimationFrame(tick);
+}
+function answer(btn){
+  if(answered) return; answered=true;
+  cancelAnimationFrame(timerRAF);
+  const id=R.ids[R.i], q=Q[id];
+  const el=Math.min(R.time,(performance.now()-qStart)/1000);
+  const ok = btn && btn.dataset.ok==="1";
+  const st=S.qs[id]||(S.qs[id]={r:0,w:0});
+  let pts=0, bonus=0;
+  if(ok){
+    R.correct++; R.streak++; st.r++; st.last=true;
+    pts=Math.round(1000*(1-0.5*el/R.time));
+    if(R.streak>=3) bonus=Math.min(300,(R.streak-2)*100);
+    R.score+=pts+bonus; sGood(); floatText(`+${pts+bonus}`);
+    S.bestStreak=Math.max(S.bestStreak,R.streak);
+  } else {
+    R.streak=0; st.w++; st.last=false; sBad();
+    R.misses.push(id);
+  }
+  save();
+  document.querySelectorAll(".ans").forEach(b=>{
+    b.disabled=true;
+    if(R.showAns){
+      if(b.dataset.ok==="1") b.classList.add("right"); else if(b!==btn) b.classList.add("dim");
+      if(b===btn && !ok) b.classList.add("picked-wrong");
+    } else {
+      if(b!==btn) b.classList.add("dim");
+    }
+  });
+  const timeout=!btn;
+  // automatisk videre: lengre tid når det er forklaring å lese
+  const delay = !R.showAns ? 1800 : (ok ? 3500 : 6500);
+  const head = ok ? `Riktig!` : (timeout ? "Tiden ute!" : "Feil");
+  let body="";
+  if(ok){
+    body = R.showAns ? `<div class="exp">${q[5]||""}</div>` : "";
+  } else if(R.showAns){
+    body = `<div class="exp"><span class="correct">Riktig svar: ${q[2]}.</span> ${q[5]||""}</div>`;
+  } else {
+    body = `<div class="exp">Du får se riktig svar på slutten av runden.</div>`;
+  }
+  $("fb").innerHTML=`<div class="feedback ${ok?'good':'bad'}">
+    <div class="big"><span>${head}</span>${ok?`<span class="pts">+${pts}${bonus?` <small>+${bonus} 🔥</small>`:''}</span>`:''}</div>
+    ${body}
+    <div class="nextrow"><button class="pausebtn" id="pauseBtn">⏸ Vent litt</button><button class="next auto" id="nextBtn" style="--d:${delay}ms">${R.i+1<R.ids.length?'Neste →':'Se resultat →'}</button></div>
+  </div>`;
+  $("gScore").textContent=R.score.toLocaleString("nb-NO");
+  $("nextBtn").onclick=advance; $("nextBtn").focus({preventScroll:true});
+  clearTimeout(autoTimer); autoTimer=setTimeout(advance, delay);
+  $("pauseBtn").onclick=()=>{clearTimeout(autoTimer);$("nextBtn").classList.remove("auto");$("pauseBtn").remove();};
+  $("fb").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+let autoTimer=null;
+function advance(){ clearTimeout(autoTimer); if(!answered || !R || R.i>=R.ids.length) return; answered=false; R.i++; if(R.i<R.ids.length) { nextQ(); window.scrollTo({top:0,behavior:"smooth"}); } else finish(); }
+function floatText(t){ const d=document.createElement("div"); d.className="float"; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),1000); }
+
+function finish(){
+  const n=R.ids.length, pct=R.correct/n;
+  S.total+=R.score;
+  let unlockMsg="", newBest=false, stars=0;
+  if(R.mode==="level"){
+    const d=lv(R.levelId); const wasOpen=isUnlocked(R.levelId+1);
+    d.plays++; if(R.correct>d.best){d.best=R.correct;newBest=true;} d.bestScore=Math.max(d.bestScore,R.score);
+    stars=starsFor(R.correct);
+    if(!wasOpen && R.levelId<5 && isUnlocked(R.levelId+1)) unlockMsg=`🔓 Nivå ${R.levelId+1} «${LEVELS[R.levelId].name}» er låst opp!`;
+    if(R.levelId===5 && R.correct>=7) unlockMsg="🏰 Bastillen er stormet! Du er klar for prøven.";
+  } else if(R.mode==="exam"){ S.examPlays=(S.examPlays||0)+1; stars=pct>=.9?3:pct>=.7?2:pct>=.5?1:0; }
+  else { stars=pct>=.9?3:pct>=.7?2:pct>=.5?1:0; }
+  save();
+  const title = pct===1?"Perfekt runde!":pct>=.8?"Vive la révolution!":pct>=.6?"Godt jobbet!":pct>=.4?"På god vei":"Øvelse gjør mester";
+  const review = R.misses.length ? `<h2 class="sec" style="justify-content:center">Disse må du øve på</h2><div class="review">${R.misses.map(id=>`<div class="r"><div class="q">${Q[id][1]}</div><div class="a">✓ ${Q[id][2]}</div><div class="e">${Q[id][5]||""}</div></div>`).join("")}</div>` : "";
+  $("result").innerHTML=`<div class="result">
+    <div class="sub">${R.label}</div>
+    <div class="title">${title}</div>
+    <div class="bigstars">${[0,1,2].map(i=>`<span class="${i<stars?'on':''}" style="animation-delay:${i*0.2}s">★</span>`).join("")}</div>
+    <div class="score">${R.score.toLocaleString("nb-NO")} p</div>
+    <div class="sub">${R.correct} av ${n} riktige${newBest?' · ny rekord!':''}</div>
+    ${unlockMsg?`<div class="unlock">${unlockMsg}</div>`:''}
+    ${R.mode==="level" && R.correct<7 && R.levelId<5 && !isUnlocked(R.levelId+1)?`<p class="sub">Klar 7 av 10 for å låse opp neste nivå. Spørsmålene du bommet på kommer igjen!</p>`:''}
+    <div class="btnrow">
+      <button class="btn pri" id="againBtn">Spill igjen</button>
+      ${R.mode==="level" && R.levelId<5 && isUnlocked(R.levelId+1)?`<button class="btn pri" id="nextLvlBtn" style="background:var(--vert)">Nivå ${R.levelId+1} →</button>`:''}
+      <button class="btn sec" id="homeBtn">Til oversikten</button>
+    </div>
+    ${review}
+  </div>`;
+  show("result");
+  $("againBtn").onclick=()=>startRound(R.mode,R.levelId);
+  $("homeBtn").onclick=()=>{renderHome();show("home");};
+  if($("nextLvlBtn")) $("nextLvlBtn").onclick=()=>startRound("level",R.levelId+1);
+  if(pct>=.7) confetti();
+}
+
+/* ===================== SKRIVETRENING ===================== */
+function renderWrite(){
+  $("wTotal").textContent=WRITE.length;
+  $("wCount").textContent=Object.values(S.write).filter(v=>v===1).length;
+  $("wcards").innerHTML=WRITE.map((w,i)=>`<div class="wcard">
+    <span class="chip">${w[0]}</span><h3>${w[1]}</h3>
+    <ul class="hidden" id="wm${i}">${w[2].map(x=>`<li>${x}</li>`).join("")}</ul>
+    <div class="row">
+      <button class="show" data-i="${i}">Vis modellsvar</button>
+      <button class="r1 ${S.write[i]===1?'sel':''}" data-r="1" data-i="${i}">Kan det</button>
+      <button class="r2 ${S.write[i]===2?'sel':''}" data-r="2" data-i="${i}">Delvis</button>
+      <button class="r3 ${S.write[i]===3?'sel':''}" data-r="3" data-i="${i}">Må øve</button>
+    </div></div>`).join("");
+  document.querySelectorAll(".wcard .show").forEach(b=>b.onclick=()=>{const u=$("wm"+b.dataset.i);u.classList.toggle("hidden");b.textContent=u.classList.contains("hidden")?"Vis modellsvar":"Skjul modellsvar";});
+  document.querySelectorAll(".wcard [data-r]").forEach(b=>b.onclick=()=>{S.write[b.dataset.i]=+b.dataset.r; if(!S.days.includes(today())) S.days.push(today()); save(); renderWrite();});
+}
+
+/* ===================== KONFETTI ===================== */
+function confetti(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const c=$("confetti"), x=c.getContext("2d"); c.width=innerWidth; c.height=innerHeight;
+  const cols=["#2f6ce0","#ffffff","#e0393e","#efb02c"];
+  const P=Array.from({length:160},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,r:Math.random()*6.28,s:5+Math.random()*6,c:cols[Math.floor(Math.random()*4)]}));
+  let f=0; (function loop(){ x.clearRect(0,0,c.width,c.height);
+    P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=.1;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore();});
+    if(++f<200) requestAnimationFrame(loop); else x.clearRect(0,0,c.width,c.height); })();
+}
+
+/* ===================== KNAPPER ===================== */
+$("muteBtn").onclick=()=>{S.mute=!S.mute;save();$("muteBtn").textContent=S.mute?"🔇":"🔊";};
+$("quitBtn").onclick=()=>{cancelAnimationFrame(timerRAF);clearTimeout(autoTimer);renderHome();show("home");};
+$("modeMiss").onclick=()=>startRound("miss");
+$("modeExam").onclick=()=>startRound("exam");
+$("modeWrite").onclick=()=>{renderWrite();show("write");};
+$("writeBack").onclick=()=>{renderHome();show("home");};
+$("unlockAll").onclick=()=>{S.unlockAll=!S.unlockAll;save();renderHome();};
+let resetArmed=false;
+$("resetBtn").onclick=()=>{
+  if(!resetArmed){resetArmed=true;$("resetBtn").textContent="Trykk igjen for å slette all framgang";setTimeout(()=>{resetArmed=false;$("resetBtn").textContent="Nullstill";},4000);return;}
+  S={levels:{},qs:{},days:[],total:0,bestStreak:0,unlockAll:false,write:{},mute:S.mute}; save(); resetArmed=false; $("resetBtn").textContent="Nullstill"; renderHome();
+};
+document.addEventListener("keydown",e=>{
+  if($("game").classList.contains("hidden")) return;
+  if(!answered && ["1","2","3"].includes(e.key)){ const b=document.querySelectorAll(".ans")[+e.key-1]; if(b) answer(b); }
+  else if(answered && (e.key==="Enter"||e.key===" ") && $("nextBtn") && document.activeElement!==$("nextBtn")){ e.preventDefault(); advance(); }
+});
+function renderName(){ $("nameIn").value=S.name||""; $("hello").textContent=S.name?`Klar, ${S.name}?`:"Klar?"; }
+$("nameIn").oninput=e=>{S.name=e.target.value.trim();save();$("hello").textContent=S.name?`Klar, ${S.name}?`:"Klar?";};
+renderName();
+renderHome();
+</script>
+</body>
+</html>
