@@ -190,7 +190,7 @@ canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:30;width:100%
       <p class="yr" aria-hidden="true">1789</p>
       <h1>Revolusjonsquizen</h1>
       <p style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px"><label for="nameIn" style="color:#fff;font-weight:600">Navnet ditt:</label><input id="nameIn" maxlength="20" placeholder="Skriv navnet ditt" style="font:inherit;background:var(--ink-2);border:1px solid var(--ink-3);color:#fff;border-radius:10px;padding:6px 10px;width:180px"></p>
-      <p><span id="hello">Klar?</span> Svar riktig og raskt for flest poeng. Klarer du 7 av 10 på et nivå, låses det neste opp. Målet er å storme Bastillen før prøven.</p>
+      <p><span id="hello">Klar?</span> Ta den tiden du trenger. 1000 poeng for hvert riktige svar, og bonus når du får flere riktige på rad. Klarer du 7 av 10 på et nivå, låses det neste opp. Målet er å storme Bastillen før prøven.</p>
     </div>
     <div class="stats">
       <span class="pill">Dager spilt <b id="daysPlayed">0</b></span>
@@ -225,10 +225,9 @@ canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:30;width:100%
       <span class="progress" id="prog">1 / 10</span>
       <span class="pill"><b id="gScore">0</b> p <span class="streak" id="gStreak"></span></span>
     </div>
-    <div class="timerbar"><i id="tbar"></i></div>
+    <div style="height:14px"></div>
     <div class="qcard">
       <span class="tag" id="qTag">Nivå 1</span>
-      <span class="clock" id="clock">30</span>
       <h2 id="qText">Spørsmål</h2>
     </div>
     <div class="answers" id="answers"></div>
@@ -480,7 +479,7 @@ function renderHome(){
     const d=lv(L.id), open=isUnlocked(L.id), n=Q.filter(q=>q[0]===L.id).length;
     return `<button class="lvl" data-l="${L.id}" ${open?'':'disabled'}>
       <span class="num" style="background:${L.color}">${open?L.id:'🔒'}</span>
-      <span><h3>${L.name}</h3><p>${L.sub} · ${n} spørsmål · ${L.time} sek</p></span>
+      <span><h3>${L.name}</h3><p>${L.sub} · ${n} spørsmål</p></span>
       <span class="meta"><div class="stars">${starHTML(starsFor(d.best))}</div>${d.plays?`Best: ${d.best}/10`:(open?'Ikke spilt':'Klar 7/10 på nivå '+(L.id-1))}</span>
     </button>`;}).join("");
   document.querySelectorAll(".lvl").forEach(b=>b.onclick=()=>startRound("level",+b.dataset.l));
@@ -528,16 +527,6 @@ function nextQ(){
   document.querySelectorAll(".ans").forEach(b=>b.onclick=()=>answer(b));
   qStart=performance.now();
   cancelAnimationFrame(timerRAF);
-  const tick=now=>{
-    const el=(now-qStart)/1000, left=Math.max(0,R.time-el);
-    $("tbar").style.transform=`scaleX(${left/R.time})`;
-    const secs=Math.ceil(left); $("clock").textContent=secs;
-    $("clock").classList.toggle("hurry",left<=5);
-    if(left<=5 && secs!==lastTick && secs>0){ lastTick=secs; sTick(); }
-    if(left<=0){ answer(null); return; }
-    timerRAF=requestAnimationFrame(tick);
-  };
-  timerRAF=requestAnimationFrame(tick);
 }
 function answer(btn){
   if(answered) return; answered=true;
@@ -549,7 +538,7 @@ function answer(btn){
   let pts=0, bonus=0;
   if(ok){
     R.correct++; R.streak++; st.r++; st.last=true;
-    pts=Math.round(1000*(1-0.5*el/R.time));
+    pts=1000;
     if(R.streak>=3) bonus=Math.min(300,(R.streak-2)*100);
     R.score+=pts+bonus; sGood(); floatText(`+${pts+bonus}`);
     S.bestStreak=Math.max(S.bestStreak,R.streak);
